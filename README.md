@@ -56,3 +56,36 @@ If you want to contribute:
 
 ### Contact 🤍
 For any questions or feedback, feel free to contact at daisyloumontante1@gmail.com
+
+---
+
+## Desktop Application Build
+
+A lightweight desktop version of the blog can be created using the
+`desktop.py` launcher script together with PyInstaller.  The launcher
+starts an embedded Waitress server and opens a native window with
+`pywebview`.
+
+To package everything into a single executable on Windows:
+
+```powershell
+# ensure you are using the project's virtual environment
+.env\Scripts\python -m pip install pyinstaller
+
+# build including templates and static assets
+.env\Scripts\python -m pyinstaller \
+    --onefile \
+    --add-data "templates;templates" \
+    --add-data "blogpost/templates;blogpost/templates" \
+    --add-data "members/templates;members/templates" \
+    --add-data "static;static" \
+    desktop.py
+```
+
+The PyInstaller bootloader extracts the bundle to a temporary
+folder before execution.  The settings module handles this by using
+`sys._MEIPASS` when running frozen so Django can still resolve
+`BASE_DIR` and load templates.
+
+The resulting `dist\desktop.exe` is a standalone desktop app that
+behaves identically to running `python desktop.py`.

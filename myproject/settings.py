@@ -15,7 +15,16 @@ import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# When packaged by PyInstaller the files are extracted to a temporary
+# folder referenced by sys._MEIPASS.  In that case we should use that
+# path as the base directory so Django can locate templates and static
+# assets bundled with the executable.
+import sys
+if getattr(sys, 'frozen', False):
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    BASE_DIR = Path(sys._MEIPASS)
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
