@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+
+<div class="auth-wrapper">
+
+    <div class="auth-card">
+
+        <h2 class="text-center mb-2">Create Account ✨</h2>
+        <p class="text-center mb-3 subtitle">
+            Join and start your writing journey.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-6 mb-2">
+                    {{ form.first_name.label_tag }}
+                    {{ form.first_name }}
+                </div>
+
+                <div class="col-6 mb-2">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div class="mb-2">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+
+            <div class="mb-2">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+
+            <div class="mb-2 position-relative">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                <span class="toggle-password" onclick="togglePassword1()">👁</span>
+
+                <div class="password-rules">
+                    {{ form.password1.help_text }}
+                </div>
+            </div>
+
+            <div class="mb-2 position-relative">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                <span class="toggle-password" onclick="togglePassword2()">👁</span>
+            </div>
+
+            <button class="btn btn-auth w-100 mt-3">
+                Register
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<style>
+
+/* REMOVE SCROLL */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* TRUE CENTER (subtract navbar height) */
+.auth-wrapper {
+    height: 89vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: -80px;   /* 🔥 PUSHES IT UP */
+}
+
+
+
+/* FIXED CLEAN CARD SIZE */
+.auth-card {
+    width: 420px;
+    height: 600px;  /* 🔥 PERFECT HEIGHT */
+    padding: 28px;
+    border-radius: 25px;
+
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+
+    color: #1e293b;
+}
+
+/* DARK MODE */
+body.dark-mode .auth-card {
+    background: rgba(15,23,42,0.4);
+    color: #f1f5f9;
+}
+
+/* SUBTITLE */
+.subtitle {
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* INPUTS */
+.auth-card input {
+    width: 100%;
+    padding: 7px 35px 7px 10px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 3px;
+
+    background: rgba(255,255,255,0.4);
+    outline: none;
+    font-size: 13px;
+}
+
+.auth-card input:focus {
+    background: rgba(255,255,255,0.6);
+}
+
+body.dark-mode .auth-card input {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* PASSWORD RULES */
+.password-rules {
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.password-rules ul {
+    padding-left: 15px;
+    margin-bottom: 0;
+}
+
+/* BUTTON */
+.btn-auth {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    border: none;
+    border-radius: 30px;
+    padding: 9px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1f1f1f;
+    transition: 0.3s ease;
+}
+
+.btn-auth:hover {
+    transform: scale(1.05);
+}
+
+/* EYE ICON */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 30px;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+</style>
+
+<script>
+function togglePassword1() {
+    const input = document.getElementById("id_password1");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+function togglePassword2() {
+    const input = document.getElementById("id_password2");
+    input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+{% endblock %}

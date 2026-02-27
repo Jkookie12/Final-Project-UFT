@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="create-wrapper d-flex align-items-center justify-content-center">
+
+    <div class="create-card">
+
+        <!-- Back Button -->
+        <button class="btn btn-back mb-3" onclick="history.back()">← Go Back</button>
+
+        <!-- Title -->
+        <h1 class="create-title">{{ post.title }}</h1>
+
+        <!-- Author + Date -->
+        <small class="text-muted d-block mb-3">
+            By: {{ post.author.first_name }} {{ post.author.last_name }} • {{ post.post_date }}
+
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                    <a href="{% url 'updatepost' post.pk %}" class="px-2">
+                        <button type="button" class="btn btn-sm btn-primary rounded-5">Edit</button>
+                    </a>
+                    <a href="{% url 'deletepost' post.pk %}">
+                        <button type="button" class="btn btn-danger btn-sm rounded-5">Delete</button>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </small>
+
+        <hr>
+
+        <!-- IMAGE -->
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="img-fluid rounded-4 mb-4 w-100">
+        {% endif %}
+
+        <!-- BODY CONTENT -->
+        <div class="post-body mb-4">
+            {{ post.body|linebreaks }}
+        </div>
+
+        <hr>
+
+        <!-- LIKE SECTION -->
+        <form action="{% url 'like_post' post.pk %}" method="POST">
+            {% csrf_token %}
+
+            {% if user.is_authenticated %}
+                {% if liked %}
+                    <button type="submit" class="btn btn-danger btn-sm rounded-5">Unlike</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary btn-sm rounded-5">Like</button>
+                {% endif %}
+            {% else %}
+                <small><a href="{% url 'login' %}">Login</a> to like.</small>
+            {% endif %}
+
+            <span class="px-1">&bull;</span>
+            <span id="like-count">{{ total_likes }} Likes</span>
+
+            <div id="likers-list" class="bubble" style="display: none;">
+                {% for liker in likers %}
+                    <div>{{ liker.first_name }} {{ liker.last_name }}</div>
+                {% endfor %}
+            </div>
+        </form>
+
+        <br>
+
+        <!-- COMMENTS -->
+        <h4>Comments 💬</h4>
+        <hr>
+
+        {% if not post.comments.all %}
+            <p>No comments yet ...</p>
+            <a href="{% url 'addcomment' post.pk %}">
+                <button class="btn btn-success btn-sm rounded-5">Add One</button>
+            </a>
+        {% else %}
+            <a href="{% url 'addcomment' post.pk %}">
+                <button class="btn btn-primary btn-sm rounded-5">Add Comment</button>
+            </a>
+
+            <br><br>
+
+            {% for comment in post.comments.all %}
+                <div class="comment-card p-3 mb-3 rounded-4">
+                    <h6>👤 {{ comment.name }} - {{ comment.date_added }}</h6>
+                    <div>{{ comment.body|linebreaks }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $("#like-count").hover(function(){
+        $("#likers-list").show();
+    }, function(){
+        $("#likers-list").hide();
+    });
+});
+</script>
+
+<style>
+
+/* Layout */
+.create-wrapper {
+    min-height: 85vh;
+}
+
+.create-card {
+    width: 100%;
+    max-width: 800px;
+    padding: 40px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+body.dark-mode .create-card {
+    background: rgba(30,41,59,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.create-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.post-body {
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* COMMENT CARD FIX */
+.comment-card {
+    background: #f8f9fa;
+    color: #000;
+}
+
+body.dark-mode .comment-card {
+    background: #1e293b;
+    color: #f1f5f9;
+}
+
+/* Like hover bubble */
+.bubble {
+    position: absolute;
+    margin-top: 10px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .bubble {
+    background-color: #1e293b;
+    color: #f1f5f9;
+}
+
+.btn-back {
+    background: #e2e8f0;
+    border-radius: 50px;
+    padding: 8px 22px;
+}
+
+body.dark-mode .btn-back {
+    background: #334155;
+    color: white;
+}
+
+</style>
+
+{% endblock %}

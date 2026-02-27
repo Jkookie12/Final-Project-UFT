@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<div class="create-wrapper d-flex align-items-center justify-content-center">
+
+    <div class="create-card">
+
+        <h2 class="create-title">✏️ Update Post</h2>
+        <p class="create-subtitle">Edit your content</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-content">
+                {{ form.as_p }}
+            </div>
+
+            {% if post.image %}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Current Image</label>
+                    <img src="{{ post.image.url }}" class="img-fluid rounded-4 mb-3">
+                </div>
+            {% endif %}
+
+            <div class="d-flex gap-3 mt-4">
+                <button class="btn btn-publish">Update Post</button>
+                <button type="button" class="btn btn-back" onclick="history.back()">Back</button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+{% else %}
+<div class="text-center mt-5">
+    <h4>You are not authorized to edit this post.</h4>
+</div>
+{% endif %}
+
+<style>
+.create-wrapper {
+    min-height: 85vh;
+}
+.create-card {
+    width: 100%;
+    max-width: 700px;
+    padding: 40px;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+body.dark-mode .create-card {
+    background: rgba(30,41,59,0.6);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.btn-publish {
+    background: linear-gradient(135deg, #ff7aa2, #ff4f81);
+    color: white;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 50px;
+}
+.btn-back {
+    background: #e2e8f0;
+    border-radius: 50px;
+    padding: 8px 22px;
+}
+</style>
+
+{% endblock %}
